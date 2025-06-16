@@ -2,18 +2,17 @@
 
 import React, { useState, useEffect } from "react";
 import { FaSearch } from "react-icons/fa";
-
+import { NavLink } from "react-router-dom";
 // Importing brand logos
 import menImg from "../../assets/men.jpg";
 import womenImg from "../../assets/women.jpg";
 import kidsImg from "../../assets/kids.jpg";
 import accessoriesImg from "../../assets/accessories.jpg";
 
-import MyntraLogo from "../../assets/myntra.png";
-import AmazonLogo from "../../assets/amazon.png";
+import snapdeal from "../../assets/snapdeal.png";
+import Shopclues from "../../assets/Shopclues.png";
 import FlipkartLogo from "../../assets/flipkart.png";
-import MeeshoLogo from "../../assets/meesho.png";
-import SavanaLogo from "../../assets/savana.png";
+
 
 // Importing shopping illustration
 import ShoppingIllustration from "../../assets/shopping-illustration.png";
@@ -46,9 +45,11 @@ const HomePage = () => {
         <h2 className="text-2xl md:text-3xl font-semibold text-black mb-4">
           One stop platform for <br /> all of your fashion needs
         </h2>
-        <button className="bg-blue-500 text-white font-semibold px-6 py-2 rounded-md hover:bg-blue-600 transition">
-          SHOP NOW
-        </button>
+       <NavLink to="/dashboard">
+  <button className="bg-blue-500 text-white font-semibold px-6 py-2 rounded-md hover:bg-blue-600 transition">
+    SHOP NOW
+  </button>
+</NavLink>
       </div>
 
       {/* Image Section */}
@@ -115,12 +116,12 @@ const HomePage = () => {
         <h3 className="text-3xl font-semibold mb-10 text-gray-800">
           Supported Brands
         </h3>
-        <div className="flex flex-wrap justify-center gap-10 items-center">
-          {[MyntraLogo, AmazonLogo, FlipkartLogo, MeeshoLogo, SavanaLogo].map(
+        <div className="flex flex-wrap justify-center gap-20 items-center">
+          {[snapdeal, Shopclues, FlipkartLogo].map(
             (logo, idx) => (
               <div
                 key={idx}
-                className="w-32 h-20 bg-white rounded-xl shadow-md p-4 flex items-center justify-center hover:scale-105 transform transition"
+                className="w-35 h-23 bg-white rounded-xl shadow-md p-4 flex items-center justify-center hover:scale-105 transform transition"
               >
                 <img
                   src={logo}

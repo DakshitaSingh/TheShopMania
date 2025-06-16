@@ -21,7 +21,7 @@ const Wishlist = () => {
     fetchWishlist();
   }, [user]);
 
-  if (!user) return <div>Please log in to view your wishlist.</div>;
+  if (!user) return <div className="p-4">Please log in to view your wishlist.</div>;
 
   return (
     <div className="p-4">
@@ -31,10 +31,18 @@ const Wishlist = () => {
       ) : (
         <ul className="grid gap-4 grid-cols-2 md:grid-cols-3">
           {wishlistItems.map((item) => (
-            <li key={item.id} className="border rounded p-4 shadow">
+            <li key={item.id} className="border rounded p-4 shadow hover:scale-105 transition-transform">
+              <img src={item.image} alt={item.name} className="w-full h-40 object-cover mb-2 rounded" />
               <h3 className="text-lg font-bold">{item.name}</h3>
-              <p>{item.description}</p>
-              <img src={item.image} alt={item.name} className="w-full mt-2" />
+              <p className="text-sm text-gray-600">{item.description}</p>
+              <a
+                href={item.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block mt-4 bg-green-500 text-white text-center px-4 py-2 rounded hover:bg-green-600"
+              >
+                Buy Now
+              </a>
             </li>
           ))}
         </ul>

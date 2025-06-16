@@ -2,52 +2,58 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 import requests
 from bs4 import BeautifulSoup
+import random
+import time
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36'
 }
 
-# Snapdeal category URLs
-SNAPDEAL_CATEGORY_URLS = {
-    "men": "https://www.snapdeal.com/products/mens-tshirts-polos?sort=plrty",
-    "women": "https://www.snapdeal.com/products/women-apparel-tops-tunics?sort=plrty",
-    "kids": "https://www.snapdeal.com/search?keyword=kids%20wear&santizedKeyword=kids%20wear&catId=0&categoryId=524"
-}
+HEADERS_LIST = [
+    # Rotate between a few user‑agents
+    {'User-Agent': 'Mozilla/5.0 ... Chrome/113.0'},
+    {'User-Agent': 'Mozilla/5.0 ... Firefox/117.0'},
+    # Add more...
+]
 
-# Snapdeal scraper
-def scrape_snapdeal(url):
+def safe_get(url):
+    for attempt in range(3):
+        headers = random.choice(HEADERS_LIST)
+        try:
+            resp = requests.get(url, headers=headers, timeout=10)
+            if resp.status_code == 200:
+                time.sleep(random.uniform(1, 2))
+                return resp
+        except requests.RequestException:
+            time.sleep(2 ** attempt)
+    return None
+
+# Snapdeal scraper using search query
+def scrape_snapdeal(query):
     products = []
     try:
+        search_query = query.replace(' ', '%20')
+        url = f"https://www.snapdeal.com/search?keyword={search_query}&sort=plrty"
         res = requests.get(url, headers=HEADERS, timeout=10)
         soup = BeautifulSoup(res.content, "lxml")
-        cards = soup.find_all("div", class_="product-tuple-listing", limit=10)
+        cards = soup.find_all("div", class_="product-tuple-listing", limit=40)
+
         for card in cards:
             title = card.find('p', class_='product-title').text.strip() if card.find('p', class_='product-title') else ''
             price = card.find('span', class_='lfloat product-price').text.strip() if card.find('span', class_='lfloat product-price') else ''
             href = card.find('a', class_='dp-widget-link')['href'] if card.find('a', class_='dp-widget-link') else ''
             link = "https://www.snapdeal.com" + href if href.startswith('/') else href
-
             rating_tag = card.find('div', class_='filled-stars')
             if rating_tag and 'style' in rating_tag.attrs:
                 width = rating_tag['style'].replace('width:', '').replace('%', '').strip()
                 rating = round(float(width) / 20, 1)
             else:
                 rating = 'No rating'
-
             image_tag = card.find('img')
-            image = (
-                image_tag.get('src') or 
-                image_tag.get('data-src') or 
-                image_tag.get('data-original') or 
-                ""
-            )
-            if image.startswith('//'):
-                image = 'https:' + image
-            elif image.startswith('/'):
-                image = 'https://www.snapdeal.com' + image
+            image = image_tag.get('src') or image_tag.get('data-src') or image_tag.get('data-original') or ''
 
             products.append({
                 "title": title,
@@ -58,10 +64,10 @@ def scrape_snapdeal(url):
                 "platform": "Snapdeal"
             })
     except Exception as e:
-        print("Snapdeal error:", e)
+        print("Snapdeal search error:", e)
     return products
 
-# ShopClues scraper using search query or category
+# ShopClues scraper using search query
 def scrape_shopclues(query):
     products = []
     try:
@@ -69,7 +75,7 @@ def scrape_shopclues(query):
         response = requests.get(url, headers=HEADERS, timeout=10)
         soup = BeautifulSoup(response.content, "lxml")
 
-        cards = soup.select(".column.col3.search_blocks")[:10]
+        cards = soup.select(".column.col3.search_blocks")[:40]
 
         for card in cards:
             title_tag = card.find("h2")
@@ -79,20 +85,8 @@ def scrape_shopclues(query):
 
             title = title_tag.text.strip() if title_tag else "No title"
             price = price_tag.text.strip() if price_tag else "No price"
-
-            image_url = (
-                image_tag.get('src') or
-                image_tag.get('data-img') or
-                ""
-            )
-            if image_url.startswith('//'):
-                image_url = 'https:' + image_url
-            elif image_url.startswith('/'):
-                image_url = 'https://www.shopclues.com' + image_url
-
+            image_url = image_tag.get("data-img") or image_tag.get("src") if image_tag else ""
             link = link_tag.get("href") if link_tag else ""
-            if link.startswith('/'):
-                link = 'https://www.shopclues.com' + link
 
             if title and link:
                 products.append({
@@ -109,24 +103,18 @@ def scrape_shopclues(query):
 
     return products
 
-@app.route("/api/products/<platform>/<category_or_query>", methods=["GET"])
-def get_products(platform, category_or_query):
+    
+
+
+# Combined route for Snapdeal and ShopClues using search
+@app.route("/api/products/<platform>/<query>", methods=["GET"])
+def get_products(platform, query):
     if platform == "snapdeal":
-        # If category_or_query is a valid category key, use category URLs
-        url = SNAPDEAL_CATEGORY_URLS.get(category_or_query.lower())
-        if url:
-            products = scrape_snapdeal(url)
-        else:
-            # Otherwise treat category_or_query as search query and construct search URL
-            search_url = f"https://www.snapdeal.com/search?keyword={category_or_query}"
-            products = scrape_snapdeal(search_url)
-        return jsonify(products)
+        return jsonify(scrape_snapdeal(query))
     elif platform == "shopclues":
-        # For ShopClues, treat category_or_query as search query always
-        products = scrape_shopclues(category_or_query)
-        return jsonify(products)
+        return jsonify(scrape_shopclues(query))
     else:
-        return jsonify({"error": "Unsupported platform"}), 400
+        return jsonify({"error": "Invalid platform"}), 400
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -1,24 +1,25 @@
-import { FaSearch, FaUser, FaHeart, FaBars, FaTimes } from "react-icons/fa";
+import { FaUser, FaHeart, FaBars, FaTimes } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
 import { useState } from "react";
 import { useAuth } from "../context/AuthProvider";
+import { useWishlist } from "../context/WishlistProvider";
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user } = useAuth();
+  const { wishlist } = useWishlist();
 
   return (
-    <nav className="w-full px-6 py-4 relative bg-white z-50">
+    <nav className="w-full px-6 py-4 relative bg-white z-50 shadow-md">
       <div className="flex items-center justify-between">
         {/* Left: Logo */}
-        <div className="flex items-center space-x-10">
-          <div className="flex flex-col">
-            <span className="text-xs text-gray-500">Get it all here</span>
-            <span className="text-3xl font-bold text-gray-900">ShopMania</span>
-          </div>
+        <div className="flex flex-col">
+          <span className="text-xs text-gray-500">Get it all here</span>
+          <span className="text-3xl font-bold text-gray-900">ShopMania</span>
         </div>
 
-        <ul className="hidden md:flex space-x-6 text-lg text-gray-900 font-medium">
+        {/* Center: Navigation Links (now centered) */}
+        <ul className="hidden md:flex space-x-15 text-lg text-gray-900 font-medium absolute left-1/2 transform -translate-x-1/2">
           <li>
             <NavLink
               to="/"
@@ -28,7 +29,7 @@ export const Navbar = () => {
               Home
             </NavLink>
           </li>
-          <li className="hover:text-black cursor-pointer flex items-center space-x-1">
+          <li>
             <NavLink
               to="/dashboard"
               className="hover:text-black cursor-pointer"
@@ -47,20 +48,9 @@ export const Navbar = () => {
             </NavLink>
           </li>
         </ul>
-        {/* Center: Search (visible on md and up) */}
-        <div className="hidden md:flex items-center bg-gray-100 px-3 py-1 rounded-md w-64">
-          <FaSearch className="text-blue-500 mr-2 text-sm" />
-          <input
-            type="text"
-            placeholder="Search"
-            className="bg-transparent focus:outline-none text-sm w-full"
-          />
-        </div>
 
         {/* Right: Icons and Menu Toggle */}
         <div className="flex items-center space-x-5 text-lg text-blue-500 font-semibold">
-          {/* Desktop links */}
-
           <div className="hidden md:flex items-center space-x-5">
             <ul className="hidden md:flex items-center space-x-5">
               {user ? (
@@ -74,39 +64,33 @@ export const Navbar = () => {
                   </NavLink>
                 </li>
               ) : (
-                <>
-                  <li>
-                    <NavLink
-                      to="/login"
-                      className="block py-2 px-4 hover:text-gray-400"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      Login/SignUp
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      to="/wishlist"
-                      className="flex items-center space-x-1 hover:text-black"
-                    >
-                      <FaHeart />
-                      <span className="text-gray-600">1</span>
-                    </NavLink>
-                  </li>
-                </>
+                <li>
+                  <NavLink
+                    to="/login"
+                    className="block py-2 px-4 hover:text-gray-400"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Login/SignUp
+                  </NavLink>
+                </li>
               )}
+              <li>
+                <NavLink
+                  to="/wishlist"
+                  className="flex items-center space-x-1 hover:text-black relative"
+                >
+                  <FaHeart />
+                  {wishlist.length > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                      {wishlist.length}
+                    </span>
+                  )}
+                </NavLink>
+              </li>
             </ul>
-
-            <NavLink
-              to="/wishlist"
-              className="flex items-center space-x-1 hover:text-black"
-            >
-              <FaHeart />
-              <span className="text-gray-600">1</span>
-            </NavLink>
           </div>
 
-          {/* Hamburger menu for mobile */}
+          {/* Hamburger (Mobile) */}
           <button
             className="md:hidden text-xl"
             onClick={() => setIsOpen(!isOpen)}
@@ -131,7 +115,7 @@ export const Navbar = () => {
             </li>
             <li>
               <NavLink
-                to="/categories"
+                to="/dashboard"
                 className="block hover:text-black"
                 onClick={() => setIsOpen(false)}
               >
@@ -147,35 +131,38 @@ export const Navbar = () => {
                 About
               </NavLink>
             </li>
-            <li>
-              <NavLink
-                to="/login"
-                className="block hover:text-black"
-                onClick={() => setIsOpen(false)}
-              >
-                Login/SignUp
-              </NavLink>
-            </li>
+            {user ? (
+              <li>
+                <NavLink
+                  to="/logout"
+                  className="block hover:text-black"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Log Out
+                </NavLink>
+              </li>
+            ) : (
+              <li>
+                <NavLink
+                  to="/login"
+                  className="block hover:text-black"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Login/SignUp
+                </NavLink>
+              </li>
+            )}
             <li>
               <NavLink
                 to="/wishlist"
-                className="block hover:text-black"
+                className="block hover:text-black flex items-center space-x-2"
                 onClick={() => setIsOpen(false)}
               >
-                Wishlist (1)
+                <FaHeart />
+                <span>Wishlist ({wishlist.length})</span>
               </NavLink>
             </li>
           </ul>
-
-          {/* Mobile search */}
-          <div className="flex items-center bg-gray-100 px-3 py-2 rounded-md w-full mt-4">
-            <FaSearch className="text-blue-500 mr-2 text-sm" />
-            <input
-              type="text"
-              placeholder="Search"
-              className="bg-transparent focus:outline-none text-sm w-full"
-            />
-          </div>
         </div>
       )}
     </nav>

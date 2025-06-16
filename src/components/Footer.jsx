@@ -33,27 +33,27 @@ export const Footer = () =>{
         <h5 className="text-lg font-semibold mb-3">Navigation</h5>
         <ul className="space-y-2 text-sm">
           <li>
-            <a href="#" className="hover:text-pink-500">
+            <a href="/home" className="hover:text-pink-500">
               Home
             </a>
           </li>
           <li>
-            <a href="#" className="hover:text-pink-500">
+            <a href="/dashboard" className="hover:text-pink-500">
               Categories
             </a>
           </li>
           <li>
-            <a href="#" className="hover:text-pink-500">
+            <a href="/dashboard" className="hover:text-pink-500">
               Deals
             </a>
           </li>
           <li>
-            <a href="#" className="hover:text-pink-500">
+            <a href="/about" className="hover:text-pink-500">
               About Us
             </a>
           </li>
           <li>
-            <a href="#" className="hover:text-pink-500">
+            <a href="/login" className="hover:text-pink-500">
               Login/SignUp
             </a>
           </li>
@@ -61,56 +61,20 @@ export const Footer = () =>{
       </div>
 
       {/* Categories */}
-      <div>
-        <h5 className="text-lg font-semibold mb-3">Popular Categories</h5>
-        <ul className="space-y-2 text-sm">
-          <li>
-            <a href="#" className="hover:text-pink-500">
-              Men’s Clothing
-            </a>
-          </li>
-          <li>
-            <a href="#" className="hover:text-pink-500">
-              Women’s Fashion
-            </a>
-          </li>
-          <li>
-            <a href="#" className="hover:text-pink-500">
-              Kids Wear
-            </a>
-          </li>
-          <li>
-            <a href="#" className="hover:text-pink-500">
-              Footwear
-            </a>
-          </li>
-          <li>
-            <a href="#" className="hover:text-pink-500">
-              Accessories
-            </a>
-          </li>
-        </ul>
-      </div>
+<div>
+  <h5 className="text-lg font-semibold mb-3">Popular Categories</h5>
+  <ul className="space-y-2 text-sm text-gray-700">
+    <li><span className="cursor-default">Men’s Clothing</span></li>
+    <li><span className="cursor-default">Women’s Fashion</span></li>
+    <li><span className="cursor-default">Kids Wear</span></li>
+    <li><span className="cursor-default">Footwear</span></li>
+    <li><span className="cursor-default">Accessories</span></li>
+  </ul>
+</div>
+
 
       {/* Newsletter */}
-      <div>
-        <h5 className="text-lg font-semibold mb-3">Stay in Touch</h5>
-        <p className="text-sm mb-3">
-          Subscribe to our newsletter and get 10% off your first order!
-        </p>
-        <form className="flex flex-col gap-3">
-          <input
-            type="email"
-            placeholder="Enter your email"
-            className="px-4 py-2 rounded border border-gray-300 text-sm"
-          />
-          <button
-            type="submit"
-            className="bg-[#4a3409] hover:bg-[#211601] text-white py-2 rounded text-sm"
-          >
-            Subscribe
-          </button>
-        </form>
+     
         <div className="mt-4 text-sm">
           <p>
             <strong>Email:</strong> support@shopmania.com
@@ -123,7 +87,7 @@ export const Footer = () =>{
           </p>
         </div>
       </div>
-    </div>
+  
 
     {/* Bottom */}
     <div className="border-t border-gray-200 mt-12 pt-6 text-center text-xs text-gray-500">
