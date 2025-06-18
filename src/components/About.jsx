@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
 
+import first from "../assets/About.png";
+import second from "../assets/About2.jpg";
+import third from "../assets/About5.jpg";
+import forth from "../assets/image11.png";
+import fifth from "../assets/image111.png";
+
+
 const AboutUs = () => {
   const [hovered, setHovered] = useState(null);
 
@@ -26,7 +33,7 @@ const AboutUs = () => {
           </div>
           <div className="h-64 sm:h-72 bg-[#e8ddd0] rounded-xl overflow-hidden border-4 border-[#5a4110] shadow-md">
             <img
-              src="src/assets/About.png"
+              src={first}
               alt="Product collage"
               className="w-full h-full object-cover object-center transition-transform duration-300 hover:scale-105"
             />
@@ -45,7 +52,7 @@ const AboutUs = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center bg-[#f7e9d5] p-6 sm:p-8 rounded-xl shadow-sm">
           <div className="h-64 sm:h-72 bg-[#e8ddd0] rounded-xl overflow-hidden border-4 border-[#5a4110] shadow-md relative">
             <img
-              src="src/assets/About2.jpg"
+              src={second}
               alt="Behind the scenes"
               className="w-full h-full object-cover object-center transition-transform duration-300 hover:scale-105"
             />
@@ -81,7 +88,7 @@ const AboutUs = () => {
               bg-[#f4eade] cursor-pointer flex items-center justify-center overflow-hidden`}
           >
             <img
-              src="src/assets/image11.png"
+              src={forth}
               alt="Fashion"
               className={`absolute inset-0 w-full h-full z-30 object-cover transition-opacity duration-500
                 ${hovered === 'left' ? 'opacity-100' : 'opacity-0'}`}
@@ -98,7 +105,7 @@ const AboutUs = () => {
               bg-[#f9f1e4] cursor-pointer flex items-center justify-center overflow-hidden`}
           >
             <img
-              src="src/assets/image111.png"
+              src={fifth}
               alt="Utility"
               className={`absolute inset-0 w-full z-30 h-full object-cover transition-opacity duration-500
                 ${hovered === 'right' ? 'opacity-100' : 'opacity-0'}`}
@@ -128,7 +135,7 @@ const AboutUs = () => {
           </div>
           <div className="h-64 sm:h-72 bg-[#e8ddd0] rounded-xl overflow-hidden border-4 border-[#5a4110] shadow-md relative">
             <img
-              src="src/assets/About5.jpg"
+              src={third}
               alt="Team behind"
               className="w-full h-full object-cover object-center transition-transform duration-300 hover:scale-105"
             />

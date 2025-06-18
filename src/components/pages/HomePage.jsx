@@ -12,7 +12,10 @@ import accessoriesImg from "../../assets/accessories.jpg";
 import snapdeal from "../../assets/SnapDeal.png";
 import Shopclues from "../../assets/Shopclues.png";
 import FlipkartLogo from "../../assets/flipkart.png";
-
+import Hero from "../../../public/hero-cover-1.png";
+import C1 from "../../../public/card-item (1).png";
+import C2 from "../../../public/card-item.png";
+import C3 from "../../../public/col-md-4.png";
 
 // Importing shopping illustration
 import ShoppingIllustration from "../../assets/shopping-illustration.png";
@@ -55,7 +58,7 @@ const HomePage = () => {
       {/* Image Section */}
       <div className="flex-1 relative z-10">
         <img
-          src="public\hero-cover-1.png" // Replace with your own image if needed
+          src={Hero} // Replace with your own image if needed
           alt="Fashion Model"
           className="w-full max-w-xl"
         />
@@ -197,7 +200,7 @@ const HomePage = () => {
                     {/* Left big image */}
                     <div className="md:col-span-2">
                         <img
-                            src="col-md-4.png"
+                            src={C3}
                             alt="Main fashion"
                             className="w-full h-full object-cover rounded-md"
                         />
@@ -206,12 +209,12 @@ const HomePage = () => {
                     {/* Right stacked images */}
                     <div className="flex flex-col gap-6">
                         <img
-                            src="card-item.png"
+                            src={C2}
                             alt="fashion"
                             className="w-full h-full object-cover rounded-md"
                         />
                         <img
-                            src="card-item (1).png"
+                            src={C1}
                             alt="fashion"
                             className="w-full h-full object-cover rounded-md"
                         />
