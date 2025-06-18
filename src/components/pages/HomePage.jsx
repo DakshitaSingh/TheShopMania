@@ -9,7 +9,7 @@ import womenImg from "../../assets/women.jpg";
 import kidsImg from "../../assets/kids.jpg";
 import accessoriesImg from "../../assets/accessories.jpg";
 
-import snapdeal from "../../assets/snapdeal.png";
+import snapdeal from "../../assets/Snapdeal.png";
 import Shopclues from "../../assets/Shopclues.png";
 import FlipkartLogo from "../../assets/flipkart.png";
 
