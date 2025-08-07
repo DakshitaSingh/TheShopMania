@@ -11,6 +11,7 @@ import accessoriesImg from "../../assets/accessories.jpg";
 
 import snapdeal from "../../assets/SnapDeal.png";
 import Shopclues from "../../assets/Shopclues.png";
+import Myntra from "../../assets/Myntra.png";
 import FlipkartLogo from "../../assets/flipkart.png";
 import Hero from "../../../public/hero-cover-1.png";
 import C1 from "../../../public/card-item (1).png";
@@ -120,7 +121,7 @@ const HomePage = () => {
           Supported Brands
         </h3>
         <div className="flex flex-wrap justify-center gap-20 items-center">
-          {[snapdeal, Shopclues, FlipkartLogo].map(
+          {[snapdeal, Shopclues, FlipkartLogo,Myntra].map(
             (logo, idx) => (
               <div
                 key={idx}

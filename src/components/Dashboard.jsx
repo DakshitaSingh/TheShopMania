@@ -10,7 +10,7 @@ const NODE_BACKEND_URL = import.meta.env.VITE_NODE_API_URL || 'http://localhost:
 const FLASK_BACKEND_URL = import.meta.env.VITE_FLASK_API_URL || 'http://localhost:5000';
 
 const Dashboard = () => {
-    const [platform, setPlatform] = useState('snapdeal');
+    const [platform, setPlatform] = useState('flipkart'); // Set default to Flipkart
     const [category, setCategory] = useState('men');
     const [searchQuery, setSearchQuery] = useState('');
     const [triggerSearch, setTriggerSearch] = useState(0);
@@ -29,9 +29,10 @@ const Dashboard = () => {
 
         try {
             let response;
-            if (platform === 'flipkart') {
-                // Use the Node.js backend URL for Flipkart
-                response = await axios.get(`${NODE_BACKEND_URL}/api/products/flipkart/${encodeURIComponent(query)}`);
+
+            if (['flipkart', 'myntra'].includes(platform)) {
+                // Use the Node.js backend URL for Puppeteer scrapers (Flipkart, Myntra)
+                response = await axios.get(`${NODE_BACKEND_URL}/api/products/${platform}/${encodeURIComponent(query)}`);
             } else {
                 // Use the Flask backend URL for other platforms (Snapdeal, Shopclues)
                 response = await axios.get(`${FLASK_BACKEND_URL}/api/products/${platform}/${encodeURIComponent(query)}`);
@@ -70,7 +71,10 @@ const Dashboard = () => {
 
             {/* Platform selection */}
             <div className="flex justify-center mb-6 gap-4 flex-wrap">
-                {['snapdeal', 'shopclues', 'flipkart'].map((plat) => (
+                {/* ================================================================= */}
+                {/* CHANGE: Reordered the array to change the button display order    */}
+                {/* ================================================================= */}
+                {['flipkart', 'myntra', 'shopclues', 'snapdeal'].map((plat) => (
                     <button
                         key={plat}
                         onClick={() => {
@@ -87,9 +91,8 @@ const Dashboard = () => {
                 ))}
             </div>
 
-            {/* Search + Category + Button */}
+            {/* Search + Category + Button (No changes below this line) */}
             <div className="flex justify-center items-center gap-4 mb-8 flex-wrap">
-                {/* Search Input with Icon */}
                 <div className="relative w-72">
                     <FaSearch className="absolute top-3.5 left-4 text-gray-400 pointer-events-none" />
                     <input
@@ -102,7 +105,6 @@ const Dashboard = () => {
                     />
                 </div>
 
-                {/* Category Select */}
                 <select
                     value={category}
                     onChange={(e) => {
@@ -121,7 +123,6 @@ const Dashboard = () => {
                     <option value="beauty">Beauty</option>
                 </select>
 
-                {/* Search Button */}
                 <button
                     onClick={handleSearchClick}
                     className="px-6 py-3 bg-blue-600 text-white rounded-full font-semibold shadow hover:bg-blue-700 transition-colors duration-300"
@@ -162,7 +163,6 @@ const Dashboard = () => {
                                     }`}
                                 />
                             </button>
-
                             <img
                                 src={product.image_url}
                                 alt={product.title}
