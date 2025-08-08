@@ -4,13 +4,18 @@ import { Filter, Heart } from 'lucide-react';
 import { FaSearch } from 'react-icons/fa';
 import { useWishlist } from '../context/WishlistProvider.jsx';
 
-// Define your backend URLs using VITE_ prefixes for Vite environment variables
-// These will be replaced by Vercel during deployment
-const NODE_BACKEND_URL = import.meta.env.VITE_NODE_API_URL || 'http://localhost:3001';
+// Define your backend URLs
+const NODE_BACKEND_URL = import.meta.env.VITE_NODE_API_URL || 'http://localhost:3001'; // This is for Flipkart
 const FLASK_BACKEND_URL = import.meta.env.VITE_FLASK_API_URL || 'http://localhost:5000';
 
+// =================================================================
+// CHANGE 1: Added a new, separate URL for your deployed Myntra service
+// =================================================================
+const MYNTRA_BACKEND_URL = import.meta.env.VITE_MYNTRA_API_URL || 'https://myntra-scraper-service.onrender.com';
+
+
 const Dashboard = () => {
-    const [platform, setPlatform] = useState('flipkart'); // Set default to Flipkart
+    const [platform, setPlatform] = useState('flipkart');
     const [category, setCategory] = useState('men');
     const [searchQuery, setSearchQuery] = useState('');
     const [triggerSearch, setTriggerSearch] = useState(0);
@@ -30,9 +35,15 @@ const Dashboard = () => {
         try {
             let response;
 
-            if (['flipkart', 'myntra'].includes(platform)) {
-                // Use the Node.js backend URL for Puppeteer scrapers (Flipkart, Myntra)
-                response = await axios.get(`${NODE_BACKEND_URL}/api/products/${platform}/${encodeURIComponent(query)}`);
+            // =================================================================
+            // CHANGE 2: Updated logic to call the specific backend for each platform
+            // =================================================================
+            if (platform === 'flipkart') {
+                // Use the original Node.js backend URL for Flipkart
+                response = await axios.get(`${NODE_BACKEND_URL}/api/products/flipkart/${encodeURIComponent(query)}`);
+            } else if (platform === 'myntra') {
+                // Use the new, dedicated Myntra backend URL
+                response = await axios.get(`${MYNTRA_BACKEND_URL}/api/products/myntra/${encodeURIComponent(query)}`);
             } else {
                 // Use the Flask backend URL for other platforms (Snapdeal, Shopclues)
                 response = await axios.get(`${FLASK_BACKEND_URL}/api/products/${platform}/${encodeURIComponent(query)}`);
@@ -69,11 +80,8 @@ const Dashboard = () => {
                 🛒 E-Commerce Product Dashboard
             </h1>
 
-            {/* Platform selection */}
+            {/* Platform selection (No changes needed here) */}
             <div className="flex justify-center mb-6 gap-4 flex-wrap">
-                {/* ================================================================= */}
-                {/* CHANGE: Reordered the array to change the button display order    */}
-                {/* ================================================================= */}
                 {['flipkart', 'myntra', 'shopclues', 'snapdeal'].map((plat) => (
                     <button
                         key={plat}
@@ -91,7 +99,8 @@ const Dashboard = () => {
                 ))}
             </div>
 
-            {/* Search + Category + Button (No changes below this line) */}
+            {/* The rest of your JSX remains exactly the same */}
+            {/* ... (Search, Category, Button, Loading, Error, Product Grid) ... */}
             <div className="flex justify-center items-center gap-4 mb-8 flex-wrap">
                 <div className="relative w-72">
                     <FaSearch className="absolute top-3.5 left-4 text-gray-400 pointer-events-none" />
@@ -104,7 +113,6 @@ const Dashboard = () => {
                         className="w-full p-3 pl-10 border border-gray-300 rounded-full shadow focus:outline-none focus:ring-2 focus:ring-blue-400"
                     />
                 </div>
-
                 <select
                     value={category}
                     onChange={(e) => {
@@ -122,7 +130,6 @@ const Dashboard = () => {
                     <option value="fashion">Fashion</option>
                     <option value="beauty">Beauty</option>
                 </select>
-
                 <button
                     onClick={handleSearchClick}
                     className="px-6 py-3 bg-blue-600 text-white rounded-full font-semibold shadow hover:bg-blue-700 transition-colors duration-300"
@@ -131,8 +138,6 @@ const Dashboard = () => {
                     {loading ? 'Searching...' : 'Search'}
                 </button>
             </div>
-
-            {/* Loading and Error */}
             {loading && (
                 <div className="text-center text-blue-600 text-lg font-medium mb-4">
                     Loading products...
@@ -143,8 +148,6 @@ const Dashboard = () => {
                     {error}
                 </div>
             )}
-
-            {/* Product Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {!loading && products.length > 0 ? (
                     products.map((product, idx) => (
@@ -178,7 +181,6 @@ const Dashboard = () => {
                             <p className="text-green-600 font-bold mb-1">{product.price}</p>
                             {product.platform && <p className="text-sm text-gray-500 mb-2">Platform: {product.platform}</p>}
                             {product.rating && <p className="text-sm text-gray-500 mb-2">Rating: {product.rating}</p>}
-
                             <a
                                 href={product.link}
                                 target="_blank"
